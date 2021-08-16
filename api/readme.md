@@ -23,7 +23,7 @@
 
 ## Errors
 API calls from `Lists` and `Items` require a temporary token obtained from `user_authenticate`.
-If an invalid token is provided or the token is expired, the call will return a `401` error.
+If an invalid token is provided or the token is expired, the call will return a `401: Unauthorized` error.
 
 If such an error is encountered, the program should call `user_authenticate` to retrieve a fresh token or require the user to sign in again (typically if authentication fails).
 
@@ -39,7 +39,7 @@ Other than a 401 error, the API should always return a 400 or 500 error code wit
 
 Calls which return this typically indicate an error with the request or the server,
 while calls that do not return this typically indicate a connection error or
-some other error.
+a critical server malfunction.
 
 ## Authentication
 
@@ -81,6 +81,8 @@ Register a new user.
 
 Authenticate an existing user.
 
+If successful, an internal ID and token will be returned. These two are necessary for `Lists` and `Items` API calls.
+
 #### Accepts
 ```
 {
@@ -94,7 +96,9 @@ Authenticate an existing user.
 ```
 {
   "success": true (boolean),
-  "message": "Successfully authenticated user." (string)
+  "message": "Successfully authenticated user." (string),
+  "internal_id": string,
+  "token": string
 }
 ```
 
@@ -116,7 +120,79 @@ Authenticate an existing user.
 
 ### list_create
 
+Create a new list with the specified values.
+
+#### Accepts
+```
+{
+  "internal_id": string,
+  "token": string,
+  "name": string,
+  "description": string,
+  "private": boolean
+}
+```
+
+#### Returns
+```
+{
+  "success": true (boolean),
+  "message": "Successfully created list." (string)
+}
+```
+
+#### 401 Errors
+- `ERR_UNAUTHORIZED` - Unable to authenticate. (May need to refresh token)
+
+#### 400 Errors
+- `ERR_INVALID_PARAMETERS` - Invalid and/or missing parameters.
+
+#### 500 Errors
+- `ERR_NOT_JSON` - Unable to return valid JSON.
+- `ERR_DATABASE_ACCESS` - Unable to access database.
+- `ERR_TABLE_ACCESS` - Unable to access table.
+- `ERR_LIST_JOIN` - List created but user is unable to join.
+
+[Back to top](#table-of-contents)
+
 ### list_edit
+
+Replace values from an existing list with the specified values.
+
+#### Accepts
+```
+{
+  "internal_id": string,
+  "token": string,
+  "list_id": string,
+  "name": string,
+  "description": string,
+  "private": boolean
+}
+```
+
+#### Returns
+```
+{
+  "success": true (boolean),
+  "message": "Successfully updated list." (string)
+}
+```
+
+#### 401 Errors
+- `ERR_UNAUTHORIZED` - Unable to authenticate. (May need to refresh token)
+
+#### 400 Errors
+- `ERR_INVALID_PARAMETERS` - Invalid and/or missing parameters.
+- `ERR_INVALID_LIST` - List does not exist.
+- `ERR_EDIT_NOT_PERMITTED` - User is not permitted to edit list.
+
+#### 500 Errors
+- `ERR_NOT_JSON` - Unable to return valid JSON.
+- `ERR_DATABASE_ACCESS` - Unable to access database.
+- `ERR_TABLE_ACCESS` - Unable to access table.
+
+[Back to top](#table-of-contents)
 
 ### list_join
 
