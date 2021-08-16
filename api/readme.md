@@ -22,6 +22,24 @@
 
 
 ## Errors
+API calls from `Lists` and `Items` require a temporary token obtained from `user_authenticate`.
+If an invalid token is provided or the token is expired, the call will return a `401` error.
+
+If such an error is encountered, the program should call `user_authenticate` to retrieve a fresh token or require the user to sign in again (typically if authentication fails).
+
+Other than a 401 error, the API should always return a 400 or 500 error code with following data:
+
+```
+{
+  "success": false (boolean),
+  "error": string,
+  "message": string
+}
+```
+
+Calls which return this typically indicate an error with the request or the server,
+while calls that do not return this typically indicate a connection error or
+some other error.
 
 ## Authentication
 
