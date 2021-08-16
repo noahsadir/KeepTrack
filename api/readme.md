@@ -30,14 +30,11 @@
 Register a new user.
 
 #### Accepts
-
-#### Accepts
 ```
 {
-  "member_id": string,
-  "member_token": string,
-  "space_id": string,
-  "ignore_before": string ~optional~
+  "api_key": string,
+  "email": string,
+  "password": string
 }
 ```
 
@@ -63,6 +60,39 @@ Register a new user.
 [Back to top](#table-of-contents)
 
 ### user_authenticate
+
+Authenticate an existing user.
+
+#### Accepts
+```
+{
+  "api_key": string,
+  "email": string,
+  "password": string
+}
+```
+
+#### Returns
+```
+{
+  "success": true (boolean),
+  "message": "Successfully authenticated user." (string)
+}
+```
+
+#### 400 Errors
+- `ERR_INVALID_API_KEY` - Invalid API Key.
+- `ERR_INVALID_EMAIL` - Invalid Email.
+- `ERR_INVALID_PASSWORD` - Invalid Password.
+- `ERR_NOT_REGISTERED` - User is not currently registered.
+
+#### 500 Errors
+- `ERR_NOT_JSON` - Unable to return valid JSON.
+- `ERR_DATABASE_ACCESS` - Unable to access database.
+- `ERR_TABLE_ACCESS` - Unable to access table.
+- `ERR_TOKEN_VERIFICATION` - Unable to verify token.
+
+[Back to top](#table-of-contents)
 
 ## Lists
 
