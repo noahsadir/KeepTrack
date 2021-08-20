@@ -12,6 +12,7 @@
   - [list_join](#list_join)
   - [list_leave](#list_leave)
   - [list_fetch_new](#list_fetch_new)
+  - [list_tag_create](#list_tag_create)
 - [Items](#items)
   - [item_create](#item_create)
   - [item_edit](#item_edit)
@@ -322,9 +323,93 @@ Fetch data for lists updated past last fetch date.
 
 ### list_tag_create
 
+Create a new tag for the specified list.
+
+If a tag with the same color already exists, it will be overwritten.
+
+_Note:_ `tag_color` *must* be a 6-character hexadecimal string
+
+#### Accepts
+```
+{
+  "internal_id": string,
+  "token": string,
+  "list_id": string,
+  "tag_name": string,
+  "tag_color": string
+}
+```
+
+#### Returns
+```
+{
+  "success": true (boolean),
+  "message": "Successfully created new / updated tag." (string)
+}
+```
+
+#### 401 Errors
+- `ERR_UNAUTHORIZED` - Unable to authenticate. (May need to refresh token)
+
+#### 400 Errors
+- `ERR_INVALID_PARAMETERS` - Invalid and/or missing parameters.
+- `ERR_INVALID_LIST` - List does not exist.
+- `ERR_NOT_CREATOR` - Cannot create tag; you are not creator of list.
+
+#### 500 Errors
+- `ERR_NOT_JSON` - Unable to return valid JSON.
+- `ERR_DATABASE_ACCESS` - Unable to access database.
+- `ERR_QUERY_FAIL` - Unable to perform query.
+- `ERR_LIST_MODIFY_DATE` - Unable to update list modification date.
+
+[Back to top](#table-of-contents)
+
 ## Items
 
 ### item_create
+
+Create a new item with the specified details.
+
+#### Accepts
+```
+{
+  "internal_id": string,
+  "token": string,
+  "list_id": string,
+  "title": string,
+  "notes": string ~OPTIONAL~,
+  "start_date": int ~OPTIONAL~,
+  "end_date": int ~OPTIONAL~,
+  "duration": int ~OPTIONAL~,
+  "repeat_interval": int ~OPTIONAL~,
+  "remind_before": int ~OPTIONAL~,
+  "priority": int ~OPTIONAL~,
+  "tag": string ~OPTIONAL~
+}
+```
+
+#### Returns
+```
+{
+  "success": true (boolean),
+  "message": "Successfully created item." (string)
+}
+```
+
+#### 401 Errors
+- `ERR_UNAUTHORIZED` - Unable to authenticate. (May need to refresh token)
+
+#### 400 Errors
+- `ERR_INVALID_PARAMETERS` - Invalid and/or missing parameters.
+- `ERR_INVALID_LIST` - List does not exist.
+- `ERR_NOT_CREATED` - Could not find newly created item; creation was likely unsuccessful."
+
+#### 500 Errors
+- `ERR_NOT_JSON` - Unable to return valid JSON.
+- `ERR_DATABASE_ACCESS` - Unable to access database.
+- `ERR_QUERY_FAIL` - Unable to perform query.
+
+[Back to top](#table-of-contents)
 
 ### item_edit
 
