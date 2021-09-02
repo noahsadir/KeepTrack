@@ -62,7 +62,7 @@ function authenticateUser($connection, $email, $password) {
   } else {
     http_response_code(500);
     header('Content-Type: application/json');
-    outputJSON('{"success": false, "error": "ERR_TABLE_ACCESS", "message": "Unable to access table."}');
+    outputJSON('{"success": false, "error": "ERR_QUERY_FAIL", "message": "Unable to perform query."}');
   }
 }
 
